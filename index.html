@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Last Asylum: Plague - Alliance Duel Calculator (9-Tier Tracker)</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0b0f19;
+      color: #e2e8f0;
+    }
+    .font-heading {
+      font-family: 'Rajdhani', sans-serif;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #111827;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #374151;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #4b5563;
+    }
+    .tier-glow {
+      box-shadow: 0 0 15px rgba(234, 179, 8, 0.25);
+    }
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
+      margin: 0; 
+    }
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#090d16] text-slate-100 flex flex-col antialiased selection:bg-amber-500 selection:text-black">
+
+  <!-- Top App Navigation Bar -->
+  <header class="sticky top-0 z-40 bg-[#0d1424]/90 backdrop-blur-md border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Logo & Title -->
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-500 to-red-600 flex items-center justify-center shadow-lg shadow-amber-500/20 text-black font-extrabold text-xl font-heading">
+          LA
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xs uppercase tracking-wider font-semibold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">Last Asylum: Plague</span>
+            <span class="text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Alliance Duel</span>
+          </div>
+          <h1 class="text-lg sm:text-xl font-bold tracking-tight text-white font-heading">9-Tier Points Calculator</h1>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center flex-wrap gap-2">
+        <button id="btn-copy-report" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold text-xs sm:text-sm shadow-md transition-all active:scale-95">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+          <span>Share Report</span>
+        </button>
+
+        <button id="btn-open-hosting" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium text-xs sm:text-sm border border-slate-700 transition-all active:scale-95">
+          <svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span>Free Hosting</span>
+        </button>
+
+        <button id="btn-reset-day" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-950/40 hover:bg-red-900/60 text-red-300 font-medium text-xs sm:text-sm border border-red-800/40 transition-all active:scale-95">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          <span>Reset Day</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Layout -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- Top Banner: Direct Points Worth Mode & 9-Tier Overview Hero -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <!-- Left Column: Direct Points Input Settings -->
+      <section class="lg:col-span-5 bg-[#111827] border border-slate-800 rounded-2xl p-5 shadow-xl relative overflow-hidden flex flex-col justify-between">
+        <div class="absolute -right-10 -top-10 w-40 h-40 bg-amber-500/5 rounded-full blur-2xl pointer-events-none"></div>
+
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center space-x-2">
+              <span class="p-1.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+              </span>
+              <h2 class="font-heading font-bold text-lg text-white tracking-wide">Direct Screen Values</h2>
+            </div>
+            <span class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/30">100% Direct Mode</span>
+          </div>
+
+          <!-- Instructions Box -->
+          <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800 mb-4 space-y-1.5">
+            <div class="flex items-center space-x-2 text-amber-400 text-xs font-bold">
+              <span>✍️ How to calculate your points:</span>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              1. Type what each task awards on your phone screen into <strong class="text-amber-300">Pts Worth</strong>.<br>
+              2. Enter the <strong class="text-white">Quantity</strong> you plan to complete.<br>
+              3. Click the <strong class="text-amber-400">Update</strong> button next to any task to calculate and save instantly!
+            </p>
+          </div>
+        </div>
+
+        <!-- Target Tier Selector & Quick Action Buttons -->
+        <div class="space-y-2.5">
+          <div class="flex items-center justify-between bg-slate-900/80 border border-slate-800 rounded-xl px-3.5 py-2.5">
+            <div class="flex items-center space-x-2">
+              <span class="text-amber-400 text-sm">🎯</span>
+              <label for="select-target-tier" class="text-xs font-semibold text-slate-300">Target Goal:</label>
+            </div>
+            <select id="select-target-tier" class="bg-slate-800 border border-slate-700 text-amber-300 font-bold text-xs sm:text-sm rounded-lg px-2.5 py-1 focus:outline-none focus:border-amber-500">
+              <option value="1">Tier 1 (38,000 pts)</option>
+              <option value="2">Tier 2 (145,000 pts)</option>
+              <option value="3">Tier 3 (550,000 pts)</option>
+              <option value="4">Tier 4 (650,000 pts)</option>
+              <option value="5">Tier 5 (1,020,000 pts)</option>
+              <option value="6">Tier 6 (2,280,000 pts)</option>
+              <option value="7">Tier 7 (2,630,000 pts)</option>
+              <option value="8">Tier 8 (3,620,000 pts)</option>
+              <option value="9" selected>Tier 9 (7,190,000 pts) ★</option>
+            </select>
+          </div>
+
+          <div class="flex items-center justify-between gap-2">
+            <button id="btn-recalculate-all" type="button" class="w-full py-1.5 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition-colors flex items-center justify-center gap-1.5">
+              <span>⚡ Recalculate Day</span>
+            </button>
+            <button id="btn-restore-default-points" type="button" class="w-full py-1.5 px-3 rounded-lg bg-slate-800/60 hover:bg-slate-700 text-slate-300 border border-slate-800 text-xs font-medium transition-colors flex items-center justify-center gap-1.5">
+              <span>↺ Reset Points to Default</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: 9-Tier Milestone Progress Tracker -->
+      <section class="lg:col-span-7 bg-[#111827] border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between">
+        <div>
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+            <div>
+              <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Projected Phase Total</span>
+              <div class="flex items-baseline space-x-2">
+                <span id="display-total-points" class="font-heading font-extrabold text-3xl sm:text-4xl text-amber-400 tracking-tight">0</span>
+                <span class="text-sm font-semibold text-slate-400">/ <span id="display-goal-points">7,190,000</span> pts</span>
+              </div>
+            </div>
+
+            <!-- Current Tier Badge -->
+            <div id="badge-current-tier" class="px-3.5 py-1.5 rounded-xl bg-slate-800 border border-slate-700 flex items-center space-x-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-slate-500 animate-pulse"></span>
+              <span id="text-current-tier" class="font-heading font-bold text-sm text-slate-300">Tier 0 (No Tiers Unlocked)</span>
+            </div>
+          </div>
+
+          <!-- Visual 9-Tier Progress Bar -->
+          <div class="relative mt-4 mb-2">
+            <!-- Background bar -->
+            <div class="h-3 w-full bg-slate-800 rounded-full overflow-hidden border border-slate-700/80">
+              <div id="progress-bar-fill" class="h-full bg-gradient-to-r from-amber-600 via-amber-500 to-emerald-400 rounded-full transition-all duration-300" style="width: 0%;"></div>
+            </div>
+
+            <!-- Tier Milestone Markers (9 Tiers: 38k up to 7.19M) -->
+            <div class="grid grid-cols-9 gap-1 mt-2 text-center text-[10px] font-mono font-semibold text-slate-400">
+              <div id="marker-t1" class="transition-colors"><span class="block">T1</span><span class="text-[9px] text-slate-500">38k</span></div>
+              <div id="marker-t2" class="transition-colors"><span class="block">T2</span><span class="text-[9px] text-slate-500">145k</span></div>
+              <div id="marker-t3" class="transition-colors"><span class="block">T3</span><span class="text-[9px] text-slate-500">550k</span></div>
+              <div id="marker-t4" class="transition-colors"><span class="block">T4</span><span class="text-[9px] text-slate-500">650k</span></div>
+              <div id="marker-t5" class="transition-colors"><span class="block">T5</span><span class="text-[9px] text-slate-500">1.02M</span></div>
+              <div id="marker-t6" class="transition-colors"><span class="block">T6</span><span class="text-[9px] text-slate-500">2.28M</span></div>
+              <div id="marker-t7" class="transition-colors"><span class="block">T7</span><span class="text-[9px] text-slate-500">2.63M</span></div>
+              <div id="marker-t8" class="transition-colors"><span class="block">T8</span><span class="text-[9px] text-slate-500">3.62M</span></div>
+              <div id="marker-t9" class="transition-colors font-bold text-amber-400"><span class="block">T9</span><span class="text-[9px] text-amber-500/80">7.19M</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Deficit / Status summary box -->
+        <div id="box-status-summary" class="mt-4 p-3 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between text-xs">
+          <div class="flex items-center space-x-2.5">
+            <span id="icon-status" class="w-6 h-6 rounded-full bg-amber-500/10 text-amber-400 flex items-center justify-center font-bold">!</span>
+            <div>
+              <span id="text-status-headline" class="font-semibold text-slate-200">Needs 7,190,000 more points for Tier 9</span>
+              <p id="text-status-subline" class="text-[11px] text-slate-400">Add tasks below to calculate your progression.</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <span id="text-percentage-completed" class="font-heading font-extrabold text-base text-amber-400">0.0%</span>
+            <span class="block text-[10px] text-slate-500">of goal reached</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Day / Phase Selection Tabs (Last Asylum: Plague Alliance Duel Days) -->
+    <section class="bg-[#111827] border border-slate-800 rounded-2xl p-4 shadow-xl">
+      <div class="flex items-center justify-between mb-3 border-b border-slate-800 pb-3">
+        <div class="flex items-center space-x-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Event Phase / Day:</span>
+          <span id="current-day-label" class="text-xs font-bold text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/20">Day 1: City Development</span>
+        </div>
+        <div class="text-xs text-slate-400 hidden sm:block">
+          Switch days to plan your tasks throughout the Alliance Duel week
+        </div>
+      </div>
+
+      <!-- Scrollable Tabs Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2" id="day-tabs-container">
+        <button type="button" class="tab-day-btn active px-3 py-2.5 rounded-xl border font-heading text-left transition-all bg-amber-500/20 border-amber-500 text-amber-300 font-bold shadow-sm" data-day="1">
+          <span class="block text-[10px] uppercase font-semibold text-amber-400">Day 1</span>
+          <span class="text-xs font-bold truncate block">City Development</span>
+        </button>
+
+        <button type="button" class="tab-day-btn px-3 py-2.5 rounded-xl border font-heading text-left transition-all bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700" data-day="2">
+          <span class="block text-[10px] uppercase font-semibold text-slate-500">Day 2</span>
+          <span class="text-xs font-bold truncate block">Base Construction</span>
+        </button>
+
+        <button type="button" class="tab-day-btn px-3 py-2.5 rounded-xl border font-heading text-left transition-all bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700" data-day="3">
+          <span class="block text-[10px] uppercase font-semibold text-slate-500">Day 3</span>
+          <span class="text-xs font-bold truncate block">Tech Research</span>
+        </button>
+
+        <button type="button" class="tab-day-btn px-3 py-2.5 rounded-xl border font-heading text-left transition-all bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700" data-day="4">
+          <span class="block text-[10px] uppercase font-semibold text-slate-500">Day 4</span>
+          <span class="text-xs font-bold truncate block">Hero Development</span>
+        </button>
+
+        <button type="button" class="tab-day-btn px-3 py-2.5 rounded-xl border font-heading text-left transition-all bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700" data-day="5">
+          <span class="block text-[10px] uppercase font-semibold text-slate-500">Day 5</span>
+          <span class="text-xs font-bold truncate block">Troop Training</span>
+        </button>
+
+        <button type="button" class="tab-day-btn px-3 py-2.5 rounded-xl border font-heading text-left transition-all bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700" data-day="6">
+          <span class="block text-[10px] uppercase font-semibold text-slate-500">Day 6</span>
+          <span class="text-xs font-bold truncate block">Total Mobilization</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Speedup Time Converter Helper Widget -->
+    <div id="speedup-helper-widget" class="bg-gradient-to-r from-slate-900 to-[#111827] border border-sky-950/60 rounded-2xl p-4 shadow-lg hidden">
+      <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center space-x-2">
+          <span class="text-sky-400">⏱️</span>
+          <h3 class="font-heading font-bold text-sm text-sky-300 uppercase tracking-wide">Quick Speedup Minutes Converter</h3>
+        </div>
+        <button id="btn-close-speedup-helper" type="button" class="text-slate-400 hover:text-slate-200 text-xs px-2 py-0.5 rounded bg-slate-800">Close</button>
+      </div>
+      <p class="text-xs text-slate-400 mb-3">Convert your days, hours, and minutes of speedups directly into minutes for the calculator:</p>
+      <div class="grid grid-cols-3 sm:grid-cols-4 gap-2.5 items-end">
+        <div>
+          <label for="helper-speedup-days" class="block text-[10px] font-semibold uppercase text-slate-400 mb-1">Days</label>
+          <input id="helper-speedup-days" type="number" min="0" value="0" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white font-bold text-sm">
+        </div>
+        <div>
+          <label for="helper-speedup-hours" class="block text-[10px] font-semibold uppercase text-slate-400 mb-1">Hours</label>
+          <input id="helper-speedup-hours" type="number" min="0" value="0" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white font-bold text-sm">
+        </div>
+        <div>
+          <label for="helper-speedup-mins" class="block text-[10px] font-semibold uppercase text-slate-400 mb-1">Minutes</label>
+          <input id="helper-speedup-mins" type="number" min="0" value="0" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white font-bold text-sm">
+        </div>
+        <div class="col-span-3 sm:col-span-1">
+          <button id="btn-apply-speedup-minutes" type="button" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs py-2 px-3 rounded-lg shadow transition-all">
+            Apply (<span id="helper-total-mins-display">0</span>m)
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Tasks Table / Cards for Selected Day -->
+    <section class="bg-[#111827] border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
+        <div>
+          <h2 class="font-heading font-bold text-lg text-white tracking-wide" id="tasks-section-title">Phase Tasks & Point Values</h2>
+          <p class="text-xs text-slate-400">Type your numbers and click <strong class="text-amber-400">Update</strong> (or press Enter) to recalculate instantly.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="btn-toggle-speedup-helper" type="button" class="px-2.5 py-1 rounded-lg bg-sky-950/40 hover:bg-sky-900/60 text-sky-300 font-semibold text-xs border border-sky-800/40 transition-colors">
+            ⏱️ Speedup Converter
+          </button>
+          <button id="btn-add-custom-task" type="button" class="px-2.5 py-1 rounded-lg bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-300 font-semibold text-xs border border-emerald-800/40 transition-colors">
+            + Add Custom Task
+          </button>
+        </div>
+      </div>
+
+      <!-- Task Items Container -->
+      <div id="tasks-list" class="space-y-3">
+        <!-- Rendered dynamically by JavaScript -->
+      </div>
+
+      <!-- Day Total Footer -->
+      <div class="pt-3 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3 text-sm">
+        <span class="text-slate-400 font-medium">Subtotal for <span id="subtotal-day-name" class="text-slate-200 font-bold">Day 1</span>:</span>
+        <div class="flex items-center space-x-2">
+          <span id="subtotal-day-points" class="font-heading font-extrabold text-xl text-amber-400">0</span>
+          <span class="text-xs text-slate-400">points</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9 Tiers Reference Table -->
+    <section class="bg-[#111827] border border-slate-800 rounded-2xl p-5 shadow-xl">
+      <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
+        <div>
+          <h3 class="font-heading font-bold text-base text-white tracking-wide">Last Asylum 9-Tier Milestone Reference</h3>
+          <p class="text-xs text-slate-400">Official individual point thresholds for Alliance Duel rewards</p>
+        </div>
+        <span class="text-xs font-semibold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">Official Scale</span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-9 gap-2.5" id="tier-reference-cards">
+        <!-- Generated dynamically with Tier 1 through Tier 9 -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-[#090d16] border-t border-slate-800/80 mt-12 py-6 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <p>Last Asylum: Plague — Alliance Duel 9-Tier Calculator. Client-side & offline safe.</p>
+      <div class="flex items-center space-x-4">
+        <button id="btn-footer-hosting" type="button" class="text-amber-400 hover:underline">How to Host Free</button>
+        <button id="btn-footer-reset-all" type="button" class="text-red-400 hover:underline">Clear Saved Data</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal: Free Hosting Guide -->
+  <div id="modal-hosting" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-[#111827] border border-slate-700 rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center space-x-2">
+          <span class="p-2 bg-sky-500/10 text-sky-400 rounded-lg">🌐</span>
+          <h3 class="font-heading font-bold text-xl text-white">Best Free Hosting Options for Your Alliance</h3>
+        </div>
+        <button id="btn-close-modal-hosting" type="button" class="text-slate-400 hover:text-white text-lg font-bold p-1">&times;</button>
+      </div>
+
+      <div class="space-y-4 text-xs sm:text-sm text-slate-300">
+        <p>Because this calculator is built as a single, self-contained HTML file, you can host it for <strong>100% free forever</strong> with zero server maintenance. Here are the top 3 recommended options:</p>
+
+        <!-- Option 1: Netlify Drop -->
+        <div class="bg-slate-900 border border-emerald-500/30 rounded-xl p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <h4 class="font-bold text-emerald-400 flex items-center gap-1.5 text-base">
+              <span>⭐ #1 Recommended: Netlify Drop</span>
+              <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full">Easiest (30 seconds)</span>
+            </h4>
+          </div>
+          <ol class="list-decimal list-inside space-y-1 text-slate-300 pl-1">
+            <li>Rename this downloaded file to <code class="bg-slate-800 px-1 py-0.5 rounded text-amber-300">index.html</code> and place it inside an empty folder.</li>
+            <li>Go to <span class="text-sky-400 font-semibold">app.netlify.com/drop</span> in your browser.</li>
+            <li>Drag & drop the folder onto the screen.</li>
+            <li><strong>Done!</strong> Netlify gives you an instant live URL (e.g., <code class="bg-slate-800 px-1 py-0.5 rounded text-emerald-300">https://last-asylum-duel.netlify.app</code>) that you can share directly with your alliance.</li>
+          </ol>
+        </div>
+
+        <!-- Option 2: GitHub Pages -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-2">
+          <h4 class="font-bold text-sky-400 text-base">Option 2: GitHub Pages (Permanent & Custom Domain)</h4>
+          <ol class="list-decimal list-inside space-y-1 text-slate-300 pl-1">
+            <li>Create a free account on <span class="text-sky-400 font-semibold">github.com</span> and create a new public repository (e.g., <code class="bg-slate-800 px-1 py-0.5 rounded text-amber-300">alliance-duel</code>).</li>
+            <li>Upload this file as <code class="bg-slate-800 px-1 py-0.5 rounded text-amber-300">index.html</code>.</li>
+            <li>Go to <strong>Settings &rarr; Pages</strong>, select branch <code class="bg-slate-800 px-1 py-0.5 rounded text-slate-300">main</code>, and click <strong>Save</strong>.</li>
+            <li>Your site will be live at <code class="bg-slate-800 px-1 py-0.5 rounded text-sky-300">https://yourusername.github.io/alliance-duel/</code>.</li>
+          </ol>
+        </div>
+
+        <!-- Option 3: Vercel / Cloudflare Pages -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-2">
+          <h4 class="font-bold text-purple-400 text-base">Option 3: Cloudflare Pages / Vercel</h4>
+          <p class="text-slate-300">Connect your GitHub repository to Cloudflare Pages or Vercel for enterprise-grade global CDN delivery, unlimited bandwidth, and automated updates whenever you edit task values.</p>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-800 flex justify-end">
+        <button id="btn-close-modal-hosting-bottom" type="button" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-lg text-xs transition-colors">
+          Got it!
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Add Custom Task -->
+  <div id="modal-add-task" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-[#111827] border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-heading font-bold text-lg text-white">Add Custom Task</h3>
+        <button id="btn-close-modal-add-task" type="button" class="text-slate-400 hover:text-white text-lg font-bold p-1">&times;</button>
+      </div>
+
+      <form id="form-custom-task" class="space-y-3.5">
+        <div>
+          <label for="input-task-name" class="block text-xs font-semibold uppercase text-slate-400 mb-1">Task Description</label>
+          <input id="input-task-name" type="text" required placeholder="e.g. Defeat Level 20 Plague Beast" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-amber-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="input-task-base-points" class="block text-xs font-semibold uppercase text-slate-400 mb-1">Points Worth per Unit</label>
+            <input id="input-task-base-points" type="number" min="0.01" step="any" required placeholder="e.g. 5000" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-amber-500">
+          </div>
+          <div>
+            <label for="input-task-unit" class="block text-xs font-semibold uppercase text-slate-400 mb-1">Per Action / Unit</label>
+            <input id="input-task-unit" type="text" required placeholder="e.g. monster / 1m" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-amber-500">
+          </div>
+        </div>
+
+        <div class="pt-3 border-t border-slate-800 flex justify-end gap-2">
+          <button id="btn-cancel-add-task" type="button" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-lg text-xs">Cancel</button>
+          <button type="submit" class="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg text-xs shadow">Add Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 border border-amber-500/50 text-white px-4 py-2.5 rounded-xl shadow-2xl flex items-center space-x-2 text-xs transition-opacity duration-300 opacity-0 pointer-events-none">
+    <span class="text-amber-400">✓</span>
+    <span id="toast-message">Report copied to clipboard!</span>
+  </div>
+
+  <!-- JavaScript Application Logic -->
+  <script>
+    (function() {
+      // 9 Tier Milestone Thresholds from Last Asylum Official Game Screenshot (38k up to 7.19M)
+      const TIERS = [
+        { tier: 1, points: 38000, label: "Tier 1" },
+        { tier: 2, points: 145000, label: "Tier 2" },
+        { tier: 3, points: 550000, label: "Tier 3" },
+        { tier: 4, points: 650000, label: "Tier 4" },
+        { tier: 5, points: 1020000, label: "Tier 5" },
+        { tier: 6, points: 2280000, label: "Tier 6" },
+        { tier: 7, points: 2630000, label: "Tier 7" },
+        { tier: 8, points: 3620000, label: "Tier 8" },
+        { tier: 9, points: 7190000, label: "Tier 9" }
+      ];
+
+      // Exact screenshot point values
+      const DEFAULT_TASKS_BY_DAY = {
+        1: [
+          { id: "d1_quest", name: "Complete Falcon Quest once", pointsPerUnit: 26000, unit: "quest", qty: 0, icon: "🦅" },
+          { id: "d1_caravan", name: "Dispatch a UR Caravan", pointsPerUnit: 230000, unit: "caravan", qty: 0, icon: "🐫" },
+          { id: "d1_essence", name: "Consume 1 Raven Essence", pointsPerUnit: 5250, unit: "essence", qty: 0, icon: "🔮" },
+          { id: "d1_stamina", name: "Consume 1 Stamina", pointsPerUnit: 315, unit: "stamina", qty: 0, icon: "⚡" },
+          { id: "d1_fruit", name: "Consume 1 Raven Fruit", pointsPerUnit: 6.3, unit: "fruit", qty: 0, icon: "🍎" },
+          { id: "d1_grain", name: "Gather Grain", pointsPerUnit: 10.5, unit: "100 Grain", batchSize: 100, qty: 0, icon: "🌾", isResource: true, resourceName: "Grain" },
+          { id: "d1_timber", name: "Gather Timber", pointsPerUnit: 10.5, unit: "100 Timber", batchSize: 100, qty: 0, icon: "🪵", isResource: true, resourceName: "Timber" },
+          { id: "d1_herbs", name: "Gather Herbs", pointsPerUnit: 10.5, unit: "60 Herbs", batchSize: 60, qty: 0, icon: "🌿", isResource: true, resourceName: "Herbs" },
+          { id: "d1_antitoxin", name: "Use Antitoxin", pointsPerUnit: 2.1, unit: "660 Antitoxin", batchSize: 660, qty: 0, icon: "🧪", isAntitoxin: true, resourceName: "Antitoxin" }
+        ],
+        2: [
+          { id: "d2_speedup", name: "Use 1m Construction Speedup", pointsPerUnit: 130, unit: "minute", qty: 0, icon: "⏱️", isSpeedup: true },
+          { id: "d2_might", name: "Increase 1 Building Might", pointsPerUnit: 25.5, unit: "might", qty: 0, icon: "🏰" },
+          { id: "d2_caravan", name: "Dispatch a UR Caravan", pointsPerUnit: 230000, unit: "caravan", qty: 0, icon: "🐫" },
+          { id: "d2_covert", name: "Execute 1 UR Covert Operation", pointsPerUnit: 176250, unit: "operation", qty: 0, icon: "🕵️" },
+          { id: "d2_recruit", name: "Recruit survivor once", pointsPerUnit: 3600, unit: "survivor", qty: 0, icon: "👥" },
+          { id: "d2_diamonds", name: "Buy a pack containing Diamonds [1 Diamond]", pointsPerUnit: 30, unit: "diamond", qty: 0, icon: "💎" }
+        ],
+        3: [
+          { id: "d3_speedup", name: "Use 1m Research Speedup", pointsPerUnit: 130, unit: "minute", qty: 0, icon: "🔬", isSpeedup: true },
+          { id: "d3_might", name: "Increase 1 Tech Might", pointsPerUnit: 24.5, unit: "might", qty: 0, icon: "📜" },
+          { id: "d3_scroll", name: "Consume 1 Study Scroll", pointsPerUnit: 630, unit: "scroll", qty: 0, icon: "📜" },
+          { id: "d3_quest", name: "Complete Falcon Quest once", pointsPerUnit: 26000, unit: "quest", qty: 0, icon: "🦅" },
+          { id: "d3_gear1", name: "For each Lv.1 Raven Gear Chest opened", pointsPerUnit: 2310, unit: "chest", qty: 0, icon: "📦" },
+          { id: "d3_gear2", name: "For each Lv.2 Raven Gear Chest opened", pointsPerUnit: 6930, unit: "chest", qty: 0, icon: "📦" },
+          { id: "d3_gear3", name: "For each Lv.3 Raven Gear Chest opened", pointsPerUnit: 21000, unit: "chest", qty: 0, icon: "📦" },
+          { id: "d3_gear4", name: "For each Lv.4 Raven Gear Chest opened", pointsPerUnit: 63000, unit: "chest", qty: 0, icon: "📦" },
+          { id: "d3_gear5", name: "For each Lv.5 Raven Gear Chest opened", pointsPerUnit: 189000, unit: "chest", qty: 0, icon: "📦" },
+          { id: "d3_gear6", name: "For each Lv.6 Raven Gear Chest opened", pointsPerUnit: 567000, unit: "chest", qty: 0, icon: "📦" },
+          { id: "d3_gear7", name: "For each Lv.7 Raven Gear Chest opened", pointsPerUnit: 1701000, unit: "chest", qty: 0, icon: "📦" },
+          { id: "d3_caravan", name: "Dispatch a UR Caravan", pointsPerUnit: 230000, unit: "caravan", qty: 0, icon: "🐫" },
+          { id: "d3_covert", name: "Execute 1 UR Covert Operation", pointsPerUnit: 176250, unit: "operation", qty: 0, icon: "🕵️" },
+          { id: "d3_diamonds", name: "Buy a pack containing Diamonds [1 Diamond]", pointsPerUnit: 30, unit: "diamond", qty: 0, icon: "💎" }
+        ],
+        4: [
+          { id: "d4_recruit", name: "Recruit heroes once", pointsPerUnit: 3900, unit: "recruit", qty: 0, icon: "🦸" },
+          { id: "d4_antitoxin", name: "Use Antitoxin", pointsPerUnit: 2.1, unit: "660 Antitoxin", batchSize: 660, qty: 0, icon: "🧪", isAntitoxin: true, resourceName: "Antitoxin" },
+          { id: "d4_ur_shard", name: "Consume 1 UR Hero Shard", pointsPerUnit: 21000, unit: "shard", qty: 0, icon: "🟡" },
+          { id: "d4_ssr_shard", name: "Consume 1 SSR Hero Shard", pointsPerUnit: 7350, unit: "shard", qty: 0, icon: "🟣" },
+          { id: "d4_sr_shard", name: "Consume 1 SR Hero Shard", pointsPerUnit: 2100, unit: "shard", qty: 0, icon: "🔵" },
+          { id: "d4_badge", name: "Use 1 Skill Badge", pointsPerUnit: 21, unit: "badge", qty: 0, icon: "🎖️" },
+          { id: "d4_caravan", name: "Dispatch a UR Caravan", pointsPerUnit: 230000, unit: "caravan", qty: 0, icon: "🐫" },
+          { id: "d4_covert", name: "Execute 1 UR Covert Operation", pointsPerUnit: 176250, unit: "operation", qty: 0, icon: "🕵️" },
+          { id: "d4_diamonds", name: "Buy a pack containing Diamonds [1 Diamond]", pointsPerUnit: 30, unit: "diamond", qty: 0, icon: "💎" }
+        ],
+        5: [
+          { id: "d5_t_boost", name: "Use 1m Training Boost", pointsPerUnit: 130, unit: "minute", qty: 0, icon: "⏱️", isSpeedup: true },
+          { id: "d5_c_speedup", name: "Use 1m Construction Speedup", pointsPerUnit: 130, unit: "minute", qty: 0, icon: "🏰", isSpeedup: true },
+          { id: "d5_r_speedup", name: "Use 1m Research Speedup", pointsPerUnit: 130, unit: "minute", qty: 0, icon: "🔬", isSpeedup: true },
+          { id: "d5_b_might", name: "Increase 1 Building Might", pointsPerUnit: 25.5, unit: "might", qty: 0, icon: "🏰" },
+          { id: "d5_t_might", name: "Increase 1 Tech Might", pointsPerUnit: 24.5, unit: "might", qty: 0, icon: "📜" },
+          { id: "d5_quest", name: "Complete Falcon Quest once", pointsPerUnit: 26000, unit: "quest", qty: 0, icon: "🦅" },
+          { id: "d5_tr1", name: "Train 1 Lv.1 soldier", pointsPerUnit: 48, unit: "soldier", qty: 0, icon: "🪖", isTroop: true },
+          { id: "d5_tr2", name: "Train 1 Lv.2 soldier", pointsPerUnit: 72, unit: "soldier", qty: 0, icon: "🪖", isTroop: true },
+          { id: "d5_tr3", name: "Train 1 Lv.3 soldier", pointsPerUnit: 96, unit: "soldier", qty: 0, icon: "🪖", isTroop: true },
+          { id: "d5_tr4", name: "Train 1 Lv.4 soldier", pointsPerUnit: 120, unit: "soldier", qty: 0, icon: "🪖", isTroop: true },
+          { id: "d5_tr5", name: "Train 1 Lv.5 soldier", pointsPerUnit: 144, unit: "soldier", qty: 0, icon: "🪖", isTroop: true },
+          { id: "d5_tr6", name: "Train 1 Lv.6 soldier", pointsPerUnit: 168, unit: "soldier", qty: 0, icon: "🪖", isTroop: true },
+          { id: "d5_tr7", name: "Train 1 Lv.7 soldier", pointsPerUnit: 192, unit: "soldier", qty: 0, icon: "🪖", isTroop: true },
+          { id: "d5_tr8", name: "Train 1 Lv.8 soldier", pointsPerUnit: 216, unit: "soldier", qty: 0, icon: "🪖", isTroop: true },
+          { id: "d5_tr9", name: "Train 1 Lv.9 soldier", pointsPerUnit: 240, unit: "soldier", qty: 0, icon: "🪖", isTroop: true },
+          { id: "d5_tr10", name: "Train 1 Lv.10 soldier", pointsPerUnit: 264, unit: "soldier", qty: 0, icon: "🪖", isTroop: true },
+          { id: "d5_caravan", name: "Dispatch a UR Caravan", pointsPerUnit: 230000, unit: "caravan", qty: 0, icon: "🐫" },
+          { id: "d5_diamonds", name: "Buy a pack containing Diamonds [1 Diamond]", pointsPerUnit: 30, unit: "diamond", qty: 0, icon: "💎" }
+        ],
+        6: [
+          { id: "d6_c_speedup", name: "Use 1m Construction Speedup", pointsPerUnit: 130, unit: "minute", qty: 0, icon: "🏰", isSpeedup: true },
+          { id: "d6_r_speedup", name: "Use 1m Research Speedup", pointsPerUnit: 130, unit: "minute", qty: 0, icon: "🔬", isSpeedup: true },
+          { id: "d6_t_speedup", name: "Use 1m Training Boost", pointsPerUnit: 130, unit: "minute", qty: 0, icon: "⚔️", isSpeedup: true },
+          { id: "d6_h_speedup", name: "Use 1m Healing Speedup", pointsPerUnit: 130, unit: "minute", qty: 0, icon: "🩹", isSpeedup: true },
+          { id: "d6_caravan", name: "Dispatch a UR Caravan", pointsPerUnit: 230000, unit: "caravan", qty: 0, icon: "🐫" },
+          { id: "d6_covert", name: "Execute 1 UR Covert Operation", pointsPerUnit: 176250, unit: "operation", qty: 0, icon: "🕵️" },
+          { id: "d6_diamonds", name: "Buy a pack containing Diamonds [1 Diamond]", pointsPerUnit: 30, unit: "diamond", qty: 0, icon: "💎" },
+          { id: "d6_def_sp1", name: "For each Lv.1 soldier defeated (specific match)", pointsPerUnit: 24.5, unit: "soldier", qty: 0, icon: "🎯", isCombat: true },
+          { id: "d6_def_sp2", name: "For each Lv.2 soldier defeated (specific match)", pointsPerUnit: 36.8, unit: "soldier", qty: 0, icon: "🎯", isCombat: true },
+          { id: "d6_def_sp3", name: "For each Lv.3 soldier defeated (specific match)", pointsPerUnit: 49.0, unit: "soldier", qty: 0, icon: "🎯", isCombat: true },
+          { id: "d6_def_sp4", name: "For each Lv.4 soldier defeated (specific match)", pointsPerUnit: 61.3, unit: "soldier", qty: 0, icon: "🎯", isCombat: true },
+          { id: "d6_def_sp5", name: "For each Lv.5 soldier defeated (specific match)", pointsPerUnit: 73.5, unit: "soldier", qty: 0, icon: "🎯", isCombat: true },
+          { id: "d6_def_sp6", name: "For each Lv.6 soldier defeated (specific match)", pointsPerUnit: 85.8, unit: "soldier", qty: 0, icon: "🎯", isCombat: true },
+          { id: "d6_def_sp7", name: "For each Lv.7 soldier defeated (specific match)", pointsPerUnit: 98.0, unit: "soldier", qty: 0, icon: "🎯", isCombat: true },
+          { id: "d6_def_sp8", name: "For each Lv.8 soldier defeated (specific match)", pointsPerUnit: 110.3, unit: "soldier", qty: 0, icon: "🎯", isCombat: true },
+          { id: "d6_def_sp9", name: "For each Lv.9 soldier defeated (specific match)", pointsPerUnit: 122.5, unit: "soldier", qty: 0, icon: "🎯", isCombat: true },
+          { id: "d6_def_sp10", name: "For each Lv.10 soldier defeated (specific match)", pointsPerUnit: 134.8, unit: "soldier", qty: 0, icon: "🎯", isCombat: true },
+          { id: "d6_def1", name: "For each Lv.1 soldier defeated", pointsPerUnit: 4.9, unit: "soldier", qty: 0, icon: "⚔️", isCombat: true },
+          { id: "d6_def2", name: "For each Lv.2 soldier defeated", pointsPerUnit: 7.4, unit: "soldier", qty: 0, icon: "⚔️", isCombat: true },
+          { id: "d6_def3", name: "For each Lv.3 soldier defeated", pointsPerUnit: 9.8, unit: "soldier", qty: 0, icon: "⚔️", isCombat: true },
+          { id: "d6_def4", name: "For each Lv.4 soldier defeated", pointsPerUnit: 12.3, unit: "soldier", qty: 0, icon: "⚔️", isCombat: true },
+          { id: "d6_def5", name: "For each Lv.5 soldier defeated", pointsPerUnit: 14.7, unit: "soldier", qty: 0, icon: "⚔️", isCombat: true },
+          { id: "d6_def6", name: "For each Lv.6 soldier defeated", pointsPerUnit: 17.2, unit: "soldier", qty: 0, icon: "⚔️", isCombat: true },
+          { id: "d6_def7", name: "For each Lv.7 soldier defeated", pointsPerUnit: 19.6, unit: "soldier", qty: 0, icon: "⚔️", isCombat: true },
+          { id: "d6_def8", name: "For each Lv.8 soldier defeated", pointsPerUnit: 22.1, unit: "soldier", qty: 0, icon: "⚔️", isCombat: true },
+          { id: "d6_def9", name: "For each Lv.9 soldier defeated", pointsPerUnit: 24.5, unit: "soldier", qty: 0, icon: "⚔️", isCombat: true },
+          { id: "d6_def10", name: "For each Lv.10 soldier defeated", pointsPerUnit: 27.0, unit: "soldier", qty: 0, icon: "⚔️", isCombat: true },
+          { id: "d6_lost1", name: "For each Lv.1 soldier lost", pointsPerUnit: 4.2, unit: "soldier", qty: 0, icon: "☠️", isCombat: true },
+          { id: "d6_lost2", name: "For each Lv.2 soldier lost", pointsPerUnit: 6.3, unit: "soldier", qty: 0, icon: "☠️", isCombat: true },
+          { id: "d6_lost3", name: "For each Lv.3 soldier lost", pointsPerUnit: 8.4, unit: "soldier", qty: 0, icon: "☠️", isCombat: true },
+          { id: "d6_lost4", name: "For each Lv.4 soldier lost", pointsPerUnit: 10.5, unit: "soldier", qty: 0, icon: "☠️", isCombat: true },
+          { id: "d6_lost5", name: "For each Lv.5 soldier lost", pointsPerUnit: 12.6, unit: "soldier", qty: 0, icon: "☠️", isCombat: true },
+          { id: "d6_lost6", name: "For each Lv.6 soldier lost", pointsPerUnit: 14.7, unit: "soldier", qty: 0, icon: "☠️", isCombat: true },
+          { id: "d6_lost7", name: "For each Lv.7 soldier lost", pointsPerUnit: 16.8, unit: "soldier", qty: 0, icon: "☠️", isCombat: true },
+          { id: "d6_lost8", name: "For each Lv.8 soldier lost", pointsPerUnit: 18.9, unit: "soldier", qty: 0, icon: "☠️", isCombat: true },
+          { id: "d6_lost9", name: "For each Lv.9 soldier lost", pointsPerUnit: 21.0, unit: "soldier", qty: 0, icon: "☠️", isCombat: true },
+          { id: "d6_lost10", name: "For each Lv.10 soldier lost", pointsPerUnit: 23.1, unit: "soldier", qty: 0, icon: "☠️", isCombat: true }
+        ]
+      };
+
+      const DAY_NAMES = {
+        1: "Day 1: City Development",
+        2: "Day 2: Base Construction",
+        3: "Day 3: Tech Research",
+        4: "Day 4: Hero Development",
+        5: "Day 5: Troop Training",
+        6: "Day 6: Total Mobilization"
+      };
+
+      // State Object
+      let activeSpeedupTargetIdx = null;
+      let state = {
+        currentDay: 1,
+        targetTier: 9,
+        tasks: JSON.parse(JSON.stringify(DEFAULT_TASKS_BY_DAY))
+      };
+
+      // Load state from localStorage if available
+      try {
+        const saved = localStorage.getItem("last_asylum_duel_state_v7");
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed && parsed.tasks) {
+            state.targetTier = parsed.targetTier || 9;
+            state.currentDay = parsed.currentDay || 1;
+            for (let d = 1; d <= 6; d++) {
+              if (parsed.tasks[d] && Array.isArray(parsed.tasks[d])) {
+                state.tasks[d] = parsed.tasks[d];
+              }
+            }
+          }
+        }
+      } catch (e) {
+        console.warn("Storage not accessible:", e);
+      }
+
+      function saveState() {
+        try {
+          localStorage.setItem("last_asylum_duel_state_v7", JSON.stringify(state));
+        } catch (e) {
+          console.warn("Could not save to localStorage:", e);
+        }
+      }
+
+      function formatNumber(num) {
+        return Math.round(num).toLocaleString('en-US');
+      }
+
+      function formatDecimal(num) {
+        const val = Number(num) || 0;
+        if (Number.isInteger(val)) return val.toLocaleString('en-US');
+        return val.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 2 });
+      }
+
+      function calculateTaskPoints(task) {
+        const pts = Number(task.pointsPerUnit) || 0;
+        const qty = Number(task.qty) || 0;
+        if (task.batchSize && task.batchSize > 1) {
+          return (qty / task.batchSize) * pts;
+        }
+        return pts * qty;
+      }
+
+      function calculateDayTotal(day) {
+        const tasks = state.tasks[day] || [];
+        return tasks.reduce((sum, task) => sum + calculateTaskPoints(task), 0);
+      }
+
+      function renderAll() {
+        renderHeader();
+        renderProgressAndTiers();
+        renderTasksList();
+        renderDayTabs();
+        renderTierReferenceCards();
+        saveState();
+      }
+
+      function renderHeader() {
+        const selectTarget = document.getElementById("select-target-tier");
+        if (selectTarget) {
+          selectTarget.value = state.targetTier;
+        }
+      }
+
+      function renderProgressAndTiers() {
+        const dayTotal = calculateDayTotal(state.currentDay);
+        const targetTierObj = TIERS.find(t => t.tier === Number(state.targetTier)) || TIERS[8];
+        const goalPoints = targetTierObj.points;
+
+        const displayTotal = document.getElementById("display-total-points");
+        if (displayTotal) {
+          displayTotal.textContent = formatNumber(dayTotal);
+        }
+
+        const displayGoal = document.getElementById("display-goal-points");
+        if (displayGoal) {
+          displayGoal.textContent = formatNumber(goalPoints);
+        }
+
+        let currentUnlockedTier = 0;
+        for (let i = TIERS.length - 1; i >= 0; i--) {
+          if (dayTotal >= TIERS[i].points) {
+            currentUnlockedTier = TIERS[i].tier;
+            break;
+          }
+        }
+
+        const badge = document.getElementById("badge-current-tier");
+        const badgeText = document.getElementById("text-current-tier");
+        if (badge && badgeText) {
+          if (currentUnlockedTier === 0) {
+            badge.className = "px-3.5 py-1.5 rounded-xl bg-slate-800 border border-slate-700 flex items-center space-x-2";
+            badgeText.textContent = "Tier 0 (No Tiers Unlocked)";
+            badgeText.className = "font-heading font-bold text-sm text-slate-400";
+          } else if (currentUnlockedTier === 9) {
+            badge.className = "px-3.5 py-1.5 rounded-xl bg-amber-500/20 border border-amber-500 text-amber-300 flex items-center space-x-2 tier-glow";
+            badgeText.textContent = "★ TIER 9 COMPLETE! ★";
+            badgeText.className = "font-heading font-extrabold text-sm text-amber-300";
+          } else {
+            badge.className = "px-3.5 py-1.5 rounded-xl bg-emerald-950/60 border border-emerald-600/60 text-emerald-300 flex items-center space-x-2";
+            badgeText.textContent = "Tier " + currentUnlockedTier + " Unlocked (" + formatNumber(TIERS[currentUnlockedTier - 1].points) + " pts)";
+            badgeText.className = "font-heading font-bold text-sm text-emerald-300";
+          }
+        }
+
+        const pct = Math.min(100, (dayTotal / goalPoints) * 100);
+        const progressBarFill = document.getElementById("progress-bar-fill");
+        if (progressBarFill) {
+          progressBarFill.style.width = pct + "%";
+        }
+
+        const pctText = document.getElementById("text-percentage-completed");
+        if (pctText) {
+          pctText.textContent = pct.toFixed(1) + "%";
+        }
+
+        const deficit = Math.max(0, goalPoints - dayTotal);
+        const statusHeadline = document.getElementById("text-status-headline");
+        const statusSubline = document.getElementById("text-status-subline");
+        const statusIcon = document.getElementById("icon-status");
+
+        if (statusHeadline && statusSubline) {
+          if (deficit === 0) {
+            statusHeadline.textContent = "Goal Achieved! Tier " + state.targetTier + " reached with +" + formatNumber(dayTotal - goalPoints) + " surplus points!";
+            statusSubline.textContent = "You have unlocked all required phase rewards for your selected goal.";
+            if (statusIcon) {
+              statusIcon.className = "w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold";
+              statusIcon.textContent = "✓";
+            }
+          } else {
+            statusHeadline.textContent = "Needs " + formatNumber(deficit) + " more points for Tier " + state.targetTier;
+            
+            const tasks = state.tasks[state.currentDay] || [];
+            const speedupTask = tasks.find(t => t.isSpeedup);
+            const caravanTask = tasks.find(t => t.name.includes("Caravan"));
+
+            const speedupRate = speedupTask ? Number(speedupTask.pointsPerUnit) : 130;
+            const caravanRate = caravanTask ? Number(caravanTask.pointsPerUnit) : 230000;
+
+            const minsNeeded = Math.ceil(deficit / (speedupRate || 1));
+            const hoursNeeded = (minsNeeded / 60).toFixed(1);
+            const caravansNeeded = Math.ceil(deficit / (caravanRate || 1));
+
+            statusSubline.textContent = "Deficit equivalent: ~" + hoursNeeded + " hours speedups OR " + caravansNeeded + " UR Caravans.";
+            if (statusIcon) {
+              statusIcon.className = "w-6 h-6 rounded-full bg-amber-500/10 text-amber-400 flex items-center justify-center font-bold";
+              statusIcon.textContent = "!";
+            }
+          }
+        }
+
+        TIERS.forEach(t => {
+          const marker = document.getElementById("marker-t" + t.tier);
+          if (marker) {
+            if (dayTotal >= t.points) {
+              marker.className = "text-emerald-400 font-bold transition-colors";
+            } else if (t.tier === Number(state.targetTier)) {
+              marker.className = "text-amber-400 font-bold transition-colors";
+            } else {
+              marker.className = "text-slate-500 transition-colors";
+            }
+          }
+        });
+
+        const subtotalName = document.getElementById("subtotal-day-name");
+        const subtotalPoints = document.getElementById("subtotal-day-points");
+        if (subtotalName) subtotalName.textContent = DAY_NAMES[state.currentDay] || ("Day " + state.currentDay);
+        if (subtotalPoints) subtotalPoints.textContent = formatNumber(dayTotal);
+      }
+
+      function renderDayTabs() {
+        const container = document.getElementById("day-tabs-container");
+        if (!container) return;
+
+        const buttons = container.querySelectorAll(".tab-day-btn");
+        buttons.forEach(btn => {
+          const d = Number(btn.getAttribute("data-day"));
+          if (d === state.currentDay) {
+            btn.className = "tab-day-btn active px-3 py-2.5 rounded-xl border font-heading text-left transition-all bg-amber-500/20 border-amber-500 text-amber-300 font-bold shadow-sm";
+          } else {
+            btn.className = "tab-day-btn px-3 py-2.5 rounded-xl border font-heading text-left transition-all bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700";
+          }
+        });
+
+        const dayLabel = document.getElementById("current-day-label");
+        if (dayLabel) {
+          dayLabel.textContent = DAY_NAMES[state.currentDay] || ("Day " + state.currentDay);
+        }
+
+        const taskTitle = document.getElementById("tasks-section-title");
+        if (taskTitle) {
+          taskTitle.textContent = (DAY_NAMES[state.currentDay] || "Day " + state.currentDay) + " Tasks & Point Values";
+        }
+      }
+
+      function renderTasksList() {
+        const listContainer = document.getElementById("tasks-list");
+        if (!listContainer) return;
+
+        const tasks = state.tasks[state.currentDay] || [];
+
+        if (tasks.length === 0) {
+          listContainer.innerHTML = '<div class="p-8 text-center text-slate-500 text-sm">No tasks listed for this day yet. Click "+ Add Custom Task" above!</div>';
+          return;
+        }
+
+        let html = "";
+        tasks.forEach((task, idx) => {
+          const totalPoints = calculateTaskPoints(task);
+          const isBatch = Boolean(task.batchSize && task.batchSize > 1);
+
+          let formulaHint = "";
+          if (isBatch) {
+            formulaHint = `Rate: <strong class="text-amber-400">${formatDecimal(task.pointsPerUnit)} pts</strong> per ${task.unit} (auto-divided by ${task.batchSize})`;
+          } else {
+            formulaHint = `Unit: <span class="text-slate-300 font-medium">${task.unit}</span>`;
+          }
+
+          html += `
+          <div class="task-row-card bg-slate-900/90 border border-slate-800/80 hover:border-slate-700 rounded-xl p-3.5 transition-all flex flex-col xl:flex-row xl:items-center justify-between gap-3.5" data-task-idx="${idx}">
+            
+            <!-- Left Info -->
+            <div class="flex items-start space-x-3 flex-1 min-w-0">
+              <span class="text-2xl select-none p-1.5 rounded-lg bg-slate-800/80 border border-slate-700/60">${task.icon || '⚔️'}</span>
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center space-x-2">
+                  <h4 class="font-semibold text-slate-200 text-sm truncate">${task.name}</h4>
+                  ${task.isSpeedup ? '<span class="text-[10px] font-bold px-1.5 py-0.2 rounded bg-sky-950 text-sky-400 border border-sky-800/50">Speedup</span>' : ''}
+                  ${task.isResource ? '<span class="text-[10px] font-bold px-1.5 py-0.2 rounded bg-emerald-950 text-emerald-400 border border-emerald-800/50">Auto-Calculate</span>' : ''}
+                  ${task.isAntitoxin ? '<span class="text-[10px] font-bold px-1.5 py-0.2 rounded bg-purple-950 text-purple-400 border border-purple-800/50">Auto-Calculate</span>' : ''}
+                </div>
+                <div class="flex items-center gap-2 mt-1 text-xs text-slate-400">
+                  <span class="text-slate-500">${formulaHint}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Middle: Editable Points Per Unit -->
+            <div class="flex items-center gap-2 bg-[#090d16] p-1.5 px-3 rounded-lg border border-slate-800">
+              <label class="text-xs font-semibold text-slate-400 whitespace-nowrap">${isBatch ? 'Pts / Batch:' : 'Pts Worth:'}</label>
+              <div class="relative w-24">
+                <input type="number" step="any" min="0" value="${task.pointsPerUnit}" class="task-pts-input w-full bg-slate-900 border border-amber-500/40 rounded px-2 py-1 text-right font-bold text-amber-300 text-xs focus:outline-none focus:border-amber-400" data-idx="${idx}" title="Points awarded per ${task.unit}">
+              </div>
+              <span class="text-[11px] text-slate-500">pts</span>
+            </div>
+
+            <!-- Middle-Right: Quick Buttons, Quantity & UPDATE BUTTON -->
+            <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+              <!-- Quick Add Buttons -->
+              <div class="flex items-center gap-1">
+                ${task.isSpeedup ? `
+                  <button type="button" class="btn-task-speedup-open px-2 py-1 bg-sky-950/60 hover:bg-sky-900/60 text-sky-300 text-xs rounded border border-sky-800/50" data-idx="${idx}">
+                    ⏱️ Time
+                  </button>
+                ` : ''}
+
+                ${task.isResource ? `
+                  <button type="button" class="btn-quick-add px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded border border-slate-700" data-idx="${idx}" data-amount="500000">+500k</button>
+                  <button type="button" class="btn-quick-add px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded border border-slate-700" data-idx="${idx}" data-amount="1000000">+1M</button>
+                  <button type="button" class="btn-quick-add px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded border border-slate-700" data-idx="${idx}" data-amount="5000000">+5M</button>
+                  <button type="button" class="btn-quick-add px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded border border-slate-700" data-idx="${idx}" data-amount="10000000">+10M</button>
+                ` : task.isAntitoxin ? `
+                  <button type="button" class="btn-quick-add px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded border border-slate-700" data-idx="${idx}" data-amount="660">+660</button>
+                  <button type="button" class="btn-quick-add px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded border border-slate-700" data-idx="${idx}" data-amount="10000">+10k</button>
+                  <button type="button" class="btn-quick-add px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded border border-slate-700" data-idx="${idx}" data-amount="50000">+50k</button>
+                  <button type="button" class="btn-quick-add px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded border border-slate-700" data-idx="${idx}" data-amount="100000">+100k</button>
+                ` : (task.isTroop || task.isCombat) ? `
+                  <button type="button" class="btn-quick-add px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded border border-slate-700" data-idx="${idx}" data-amount="100">+100</button>
+                  <button type="button" class="btn-quick-add px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded border border-slate-700" data-idx="${idx}" data-amount="1000">+1k</button>
+                  <button type="button" class="btn-quick-add px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded border border-slate-700" data-idx="${idx}" data-amount="10000">+10k</button>
+                ` : `
+                  <button type="button" class="btn-quick-add px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded border border-slate-700" data-idx="${idx}" data-amount="1">+1</button>
+                  <button type="button" class="btn-quick-add px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded border border-slate-700" data-idx="${idx}" data-amount="5">+5</button>
+                  <button type="button" class="btn-quick-add px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded border border-slate-700" data-idx="${idx}" data-amount="10">+10</button>
+                `}
+              </div>
+
+              <!-- Quantity Input -->
+              <div class="flex items-center gap-1.5">
+                <label class="text-xs text-slate-500 whitespace-nowrap">${isBatch ? 'Total Amount:' : 'Qty:'}</label>
+                <div class="${isBatch ? 'w-32' : 'w-24'}">
+                  <input type="number" min="0" step="any" value="${task.qty || 0}" class="task-qty-input w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-right font-bold text-white text-sm focus:outline-none focus:border-amber-500" data-idx="${idx}" placeholder="${isBatch ? 'e.g. 1000000' : '0'}">
+                </div>
+              </div>
+
+              <!-- UPDATE BUTTON -->
+              <button type="button" class="btn-update-task px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 active:scale-95 text-slate-950 font-bold text-xs shadow transition-all flex items-center gap-1" data-idx="${idx}">
+                <span>Update</span>
+              </button>
+            </div>
+
+            <!-- Right: Total Points Earned -->
+            <div class="flex items-center justify-between xl:justify-end gap-3 min-w-[150px] border-t xl:border-t-0 pt-2 xl:pt-0 border-slate-800/80">
+              <div class="text-right">
+                <span class="task-total-display block font-heading font-bold text-base text-amber-400">+${formatNumber(totalPoints)}</span>
+                <span class="block text-[10px] text-slate-500">total points</span>
+              </div>
+
+              <button type="button" class="btn-delete-task text-slate-500 hover:text-red-400 p-1 transition-colors" data-idx="${idx}" title="Remove Task">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              </button>
+            </div>
+
+          </div>
+          `;
+        });
+
+        listContainer.innerHTML = html;
+
+        // Function to update a specific task row immediately
+        function updateTaskFromRow(row, idx) {
+          const ptsInp = row.querySelector(".task-pts-input");
+          const qtyInp = row.querySelector(".task-qty-input");
+          const totalDisplay = row.querySelector(".task-total-display");
+
+          const ptsVal = parseFloat(ptsInp ? ptsInp.value : 0) || 0;
+          const qtyVal = parseFloat(qtyInp ? qtyInp.value : 0) || 0;
+
+          state.tasks[state.currentDay][idx].pointsPerUnit = Math.max(0, ptsVal);
+          state.tasks[state.currentDay][idx].qty = Math.max(0, qtyVal);
+
+          const taskTotal = calculateTaskPoints(state.tasks[state.currentDay][idx]);
+          if (totalDisplay) {
+            totalDisplay.textContent = "+" + formatNumber(taskTotal);
+          }
+
+          renderProgressAndTiers();
+          saveState();
+        }
+
+        // Attach UPDATE button listeners
+        listContainer.querySelectorAll(".btn-update-task").forEach(btn => {
+          btn.addEventListener("click", function() {
+            const idx = Number(this.getAttribute("data-idx"));
+            const row = this.closest(".task-row-card");
+            if (row) {
+              updateTaskFromRow(row, idx);
+              
+              // Visual confirmation
+              const origHtml = this.innerHTML;
+              this.innerHTML = "<span>✓ Saved</span>";
+              this.classList.remove("bg-amber-500", "hover:bg-amber-400", "text-slate-950");
+              this.classList.add("bg-emerald-500", "text-black");
+              
+              setTimeout(() => {
+                this.innerHTML = origHtml;
+                this.classList.remove("bg-emerald-500", "text-black");
+                this.classList.add("bg-amber-500", "hover:bg-amber-400", "text-slate-950");
+              }, 1200);
+
+              const taskName = state.tasks[state.currentDay][idx].name;
+              showToast("Updated " + taskName + "!");
+            }
+          });
+        });
+
+        // Instant live typing listener for Pts input
+        listContainer.querySelectorAll(".task-pts-input").forEach(inp => {
+          const handlePtsChange = function() {
+            const idx = Number(this.getAttribute("data-idx"));
+            const row = this.closest(".task-row-card");
+            if (row) updateTaskFromRow(row, idx);
+          };
+          inp.addEventListener("input", handlePtsChange);
+          inp.addEventListener("change", handlePtsChange);
+        });
+
+        // Instant live typing listener for Qty input
+        listContainer.querySelectorAll(".task-qty-input").forEach(inp => {
+          const handleQtyChange = function() {
+            const idx = Number(this.getAttribute("data-idx"));
+            const row = this.closest(".task-row-card");
+            if (row) updateTaskFromRow(row, idx);
+          };
+          inp.addEventListener("input", handleQtyChange);
+          inp.addEventListener("change", handleQtyChange);
+        });
+
+        // Quick add buttons
+        listContainer.querySelectorAll(".btn-quick-add").forEach(btn => {
+          btn.addEventListener("click", function() {
+            const idx = Number(this.getAttribute("data-idx"));
+            const amount = parseFloat(this.getAttribute("data-amount")) || 1;
+            const current = Number(state.tasks[state.currentDay][idx].qty) || 0;
+            state.tasks[state.currentDay][idx].qty = current + amount;
+            renderAll();
+          });
+        });
+
+        // Speedup helper trigger
+        listContainer.querySelectorAll(".btn-task-speedup-open").forEach(btn => {
+          btn.addEventListener("click", function() {
+            activeSpeedupTargetIdx = Number(this.getAttribute("data-idx"));
+            const widget = document.getElementById("speedup-helper-widget");
+            if (widget) {
+              widget.classList.remove("hidden");
+              widget.scrollIntoView({ behavior: 'smooth' });
+            }
+          });
+        });
+
+        // Delete task
+        listContainer.querySelectorAll(".btn-delete-task").forEach(btn => {
+          btn.addEventListener("click", function() {
+            const idx = Number(this.getAttribute("data-idx"));
+            state.tasks[state.currentDay].splice(idx, 1);
+            renderAll();
+          });
+        });
+      }
+
+      function renderTierReferenceCards() {
+        const container = document.getElementById("tier-reference-cards");
+        if (!container) return;
+
+        const dayTotal = calculateDayTotal(state.currentDay);
+        let html = "";
+
+        TIERS.forEach(t => {
+          const reached = dayTotal >= t.points;
+          const isTarget = t.tier === Number(state.targetTier);
+
+          let borderClass = reached ? "border-emerald-500 bg-emerald-950/20" : (isTarget ? "border-amber-500 bg-amber-950/20" : "border-slate-800 bg-slate-900/50");
+          let textClass = reached ? "text-emerald-400" : (isTarget ? "text-amber-400" : "text-slate-300");
+
+          html += `
+          <div class="rounded-xl border ${borderClass} p-2.5 text-center flex flex-col justify-between">
+            <div class="flex items-center justify-between text-[11px] mb-1">
+              <span class="font-bold font-heading text-slate-400">T${t.tier}</span>
+              ${reached ? '<span class="text-emerald-400 text-[10px]">✓ Unlocked</span>' : (isTarget ? '<span class="text-amber-400 text-[10px]">★ Goal</span>' : '')}
+            </div>
+            <div class="font-heading font-extrabold text-sm ${textClass}">${formatNumber(t.points)}</div>
+            <span class="text-[9px] text-slate-500 mt-0.5">points</span>
+          </div>
+          `;
+        });
+
+        container.innerHTML = html;
+      }
+
+      function showToast(msg) {
+        const toast = document.getElementById("toast");
+        const msgSpan = document.getElementById("toast-message");
+        if (!toast || !msgSpan) return;
+
+        msgSpan.textContent = msg;
+        toast.classList.remove("opacity-0", "pointer-events-none");
+        toast.classList.add("opacity-100");
+
+        setTimeout(() => {
+          toast.classList.remove("opacity-100");
+          toast.classList.add("opacity-0", "pointer-events-none");
+        }, 2500);
+      }
+
+      function initListeners() {
+        // Recalculate Day button
+        const btnRecalc = document.getElementById("btn-recalculate-all");
+        if (btnRecalc) {
+          btnRecalc.addEventListener("click", function() {
+            renderAll();
+            showToast("Recalculated all tasks for " + (DAY_NAMES[state.currentDay] || "today") + "!");
+          });
+        }
+
+        // Restore default points button
+        const btnRestoreDefaults = document.getElementById("btn-restore-default-points");
+        if (btnRestoreDefaults) {
+          btnRestoreDefaults.addEventListener("click", function() {
+            for (let d = 1; d <= 6; d++) {
+              const defs = DEFAULT_TASKS_BY_DAY[d] || [];
+              const curr = state.tasks[d] || [];
+              defs.forEach(defTask => {
+                const existing = curr.find(t => t.id === defTask.id);
+                if (existing) {
+                  existing.pointsPerUnit = defTask.pointsPerUnit;
+                }
+              });
+            }
+            renderAll();
+            showToast("Restored screenshot point values for all tasks!");
+          });
+        }
+
+        // Target Tier Selector
+        const selectTarget = document.getElementById("select-target-tier");
+        if (selectTarget) {
+          selectTarget.addEventListener("change", function() {
+            state.targetTier = Number(this.value);
+            renderAll();
+          });
+        }
+
+        // Day Tabs
+        const dayTabs = document.querySelectorAll(".tab-day-btn");
+        dayTabs.forEach(btn => {
+          btn.addEventListener("click", function() {
+            state.currentDay = Number(this.getAttribute("data-day"));
+            renderAll();
+          });
+        });
+
+        // Reset Day button
+        const btnResetDay = document.getElementById("btn-reset-day");
+        if (btnResetDay) {
+          btnResetDay.addEventListener("click", function() {
+            if (state.tasks[state.currentDay]) {
+              state.tasks[state.currentDay].forEach(t => t.qty = 0);
+              renderAll();
+              showToast("Reset all quantities for " + (DAY_NAMES[state.currentDay] || "today") + ".");
+            }
+          });
+        }
+
+        // Footer Reset All button
+        const btnFooterReset = document.getElementById("btn-footer-reset-all");
+        if (btnFooterReset) {
+          btnFooterReset.addEventListener("click", function() {
+            state.tasks = JSON.parse(JSON.stringify(DEFAULT_TASKS_BY_DAY));
+            state.targetTier = 9;
+            renderAll();
+            showToast("Restored all tasks, point values, and settings to defaults.");
+          });
+        }
+
+        // Speedup Converter controls
+        const btnToggleSpeedup = document.getElementById("btn-toggle-speedup-helper");
+        const widgetSpeedup = document.getElementById("speedup-helper-widget");
+        const btnCloseSpeedup = document.getElementById("btn-close-speedup-helper");
+
+        if (btnToggleSpeedup && widgetSpeedup) {
+          btnToggleSpeedup.addEventListener("click", function() {
+            widgetSpeedup.classList.toggle("hidden");
+          });
+        }
+
+        if (btnCloseSpeedup && widgetSpeedup) {
+          btnCloseSpeedup.addEventListener("click", function() {
+            widgetSpeedup.classList.add("hidden");
+          });
+        }
+
+        const helperDays = document.getElementById("helper-speedup-days");
+        const helperHours = document.getElementById("helper-speedup-hours");
+        const helperMins = document.getElementById("helper-speedup-mins");
+        const helperDisplay = document.getElementById("helper-total-mins-display");
+
+        function updateSpeedupHelperTotal() {
+          const d = parseFloat(helperDays.value) || 0;
+          const h = parseFloat(helperHours.value) || 0;
+          const m = parseFloat(helperMins.value) || 0;
+          const total = (d * 1440) + (h * 60) + m;
+          if (helperDisplay) helperDisplay.textContent = formatNumber(total);
+          return total;
+        }
+
+        if (helperDays) helperDays.addEventListener("input", updateSpeedupHelperTotal);
+        if (helperHours) helperHours.addEventListener("input", updateSpeedupHelperTotal);
+        if (helperMins) helperMins.addEventListener("input", updateSpeedupHelperTotal);
+
+        const btnApplySpeedup = document.getElementById("btn-apply-speedup-minutes");
+        if (btnApplySpeedup) {
+          btnApplySpeedup.addEventListener("click", function() {
+            const totalMins = updateSpeedupHelperTotal();
+            if (totalMins <= 0) {
+              showToast("Enter a positive duration in days, hours, or minutes.");
+              return;
+            }
+            const tasks = state.tasks[state.currentDay] || [];
+            let targetTask = null;
+            if (activeSpeedupTargetIdx !== null && tasks[activeSpeedupTargetIdx] && tasks[activeSpeedupTargetIdx].isSpeedup) {
+              targetTask = tasks[activeSpeedupTargetIdx];
+            } else {
+              targetTask = tasks.find(t => t.isSpeedup);
+            }
+            if (targetTask) {
+              targetTask.qty = (targetTask.qty || 0) + totalMins;
+              renderAll();
+              showToast("Added " + formatNumber(totalMins) + " speedup minutes to " + targetTask.name + "!");
+            } else {
+              showToast("No speedup task found on current day.");
+            }
+          });
+        }
+
+        // Add Custom Task Modal
+        const modalAddTask = document.getElementById("modal-add-task");
+        const btnOpenAddTask = document.getElementById("btn-add-custom-task");
+        const btnCloseAddTask = document.getElementById("btn-close-modal-add-task");
+        const btnCancelAddTask = document.getElementById("btn-cancel-add-task");
+        const formCustomTask = document.getElementById("form-custom-task");
+
+        if (btnOpenAddTask && modalAddTask) {
+          btnOpenAddTask.addEventListener("click", function() {
+            modalAddTask.classList.remove("hidden");
+          });
+        }
+
+        function closeAddTaskModal() {
+          if (modalAddTask) modalAddTask.classList.add("hidden");
+          if (formCustomTask) formCustomTask.reset();
+        }
+
+        if (btnCloseAddTask) btnCloseAddTask.addEventListener("click", closeAddTaskModal);
+        if (btnCancelAddTask) btnCancelAddTask.addEventListener("click", closeAddTaskModal);
+
+        if (formCustomTask) {
+          formCustomTask.addEventListener("submit", function(e) {
+            e.preventDefault();
+            const name = document.getElementById("input-task-name").value.trim();
+            const basePoints = parseFloat(document.getElementById("input-task-base-points").value) || 0;
+            const unit = document.getElementById("input-task-unit").value.trim() || "unit";
+
+            if (!name || basePoints <= 0) return;
+
+            const newTask = {
+              id: "custom_" + Date.now(),
+              name: name,
+              pointsPerUnit: basePoints,
+              unit: unit,
+              qty: 1,
+              icon: "⭐"
+            };
+
+            state.tasks[state.currentDay].push(newTask);
+            closeAddTaskModal();
+            renderAll();
+            showToast("Added custom task: " + name);
+          });
+        }
+
+        // Free Hosting Modal
+        const modalHosting = document.getElementById("modal-hosting");
+        const btnOpenHosting = document.getElementById("btn-open-hosting");
+        const btnFooterHosting = document.getElementById("btn-footer-hosting");
+        const btnCloseHosting = document.getElementById("btn-close-modal-hosting");
+        const btnCloseHostingBottom = document.getElementById("btn-close-modal-hosting-bottom");
+
+        function openHostingModal() {
+          if (modalHosting) modalHosting.classList.remove("hidden");
+        }
+
+        function closeHostingModal() {
+          if (modalHosting) modalHosting.classList.add("hidden");
+        }
+
+        if (btnOpenHosting) btnOpenHosting.addEventListener("click", openHostingModal);
+        if (btnFooterHosting) btnFooterHosting.addEventListener("click", openHostingModal);
+        if (btnCloseHosting) btnCloseHosting.addEventListener("click", closeHostingModal);
+        if (btnCloseHostingBottom) btnCloseHostingBottom.addEventListener("click", closeHostingModal);
+
+        // Copy / Share Report button
+        const btnCopyReport = document.getElementById("btn-copy-report");
+        if (btnCopyReport) {
+          btnCopyReport.addEventListener("click", function() {
+            const dayTotal = calculateDayTotal(state.currentDay);
+            const targetTierObj = TIERS.find(t => t.tier === Number(state.targetTier)) || TIERS[8];
+            const goalPoints = targetTierObj.points;
+            const pct = ((dayTotal / goalPoints) * 100).toFixed(1);
+            
+            let unlocked = 0;
+            for (let i = TIERS.length - 1; i >= 0; i--) {
+              if (dayTotal >= TIERS[i].points) {
+                unlocked = TIERS[i].tier;
+                break;
+              }
+            }
+
+            const activeTasks = (state.tasks[state.currentDay] || []).filter(t => (t.qty || 0) > 0);
+            let taskLines = activeTasks.map(t => {
+              if (t.batchSize && t.batchSize > 1) {
+                return "  • " + t.name + ": " + formatNumber(t.qty) + " (" + formatDecimal(t.pointsPerUnit) + " pts per " + t.unit + ") = " + formatNumber(calculateTaskPoints(t)) + " pts";
+              }
+              return "  • " + t.name + ": " + formatNumber(t.qty) + " × " + formatDecimal(t.pointsPerUnit) + " pts = " + formatNumber(calculateTaskPoints(t)) + " pts";
+            }).join("\n");
+            if (!taskLines) taskLines = "  (No tasks prepped yet)";
+
+            const report = 
+`🛡️ LAST ASYLUM: PLAGUE — ALLIANCE DUEL PLAN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📅 Event: ${DAY_NAMES[state.currentDay] || ("Day " + state.currentDay)}
+🎯 Target: Tier ${state.targetTier} (${formatNumber(goalPoints)} pts)
+⭐ Projected Points: ${formatNumber(dayTotal)} pts (${pct}% of goal)
+🏆 Current Unlock: ${unlocked > 0 ? "Tier " + unlocked + " Achieved!" : "Tier 0 (In Progress)"}
+${dayTotal >= goalPoints ? "✅ STATUS: TARGET GOAL REACHED!" : "⚠️ DEFICIT: " + formatNumber(goalPoints - dayTotal) + " pts remaining"}
+
+📋 Planned Breakdown:
+${taskLines}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Generated via Alliance Duel 9-Tier Calculator`;
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(report).then(() => {
+                showToast("Report copied to clipboard! Ready to paste in Discord or Alliance chat.");
+              }).catch(() => {
+                fallbackCopy(report);
+              });
+            } else {
+              fallbackCopy(report);
+            }
+          });
+        }
+
+        function fallbackCopy(text) {
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          ta.style.position = "fixed";
+          ta.style.opacity = "0";
+          document.body.appendChild(ta);
+          ta.focus();
+          ta.select();
+          try {
+            document.execCommand('copy');
+            showToast("Report copied to clipboard!");
+          } catch (e) {
+            showToast("Unable to copy automatically.");
+          }
+          document.body.removeChild(ta);
+        }
+      }
+
+      initListeners();
+      renderAll();
+
+    })();
+  </script>
+</body>
+</html>
